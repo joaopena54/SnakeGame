@@ -7,12 +7,12 @@ import main.java.enums.Direction;
 
 public class Snake {
     
-    private LinkedList<Point> body;
+    private LinkedList<SnakePart> body;
 
     public Snake(int x , int y){
 
-        body = new LinkedList<Point>();
-        Point start = new Point(x, y);
+        body = new LinkedList<SnakePart>();
+        SnakePart start = new SnakePart( new Point(x, y) , 'r');
         body.add(start);
 
     }
@@ -21,34 +21,34 @@ public class Snake {
 
         if(direction == Direction.UP) {
 
-            if( (int)body.getFirst().getY() - unitSize < 0 ){
-                body.addFirst(new Point( (int) body.getFirst().getX() , HEIGHT));
+            if( (int)body.getFirst().getFirst().getY() - unitSize < 0 ){
+                body.addFirst(new SnakePart(new Point( (int) body.getFirst().getFirst().getX() , HEIGHT) , 'u'));
             } else {
-                body.addFirst(new Point( (int) body.getFirst().getX() , (int)body.getFirst().getY() - unitSize));
+                body.addFirst(new SnakePart( new Point( (int) body.getFirst().getFirst().getX() , (int)body.getFirst().getFirst().getY() - unitSize) , 'u'));
             }  
 
         } else if(direction == Direction.LEFT) {
 
-            if((int) body.getFirst().getX() - unitSize < 0){
-                body.addFirst(new Point( WIDTH, (int)body.getFirst().getY()));
+            if((int) body.getFirst().getFirst().getX() - unitSize < 0){
+                body.addFirst(new SnakePart(new Point( WIDTH, (int)body.getFirst().getFirst().getY()) , 'l'));
             } else {
-                body.addFirst(new Point( (int) body.getFirst().getX() - unitSize, (int)body.getFirst().getY()));
+                body.addFirst(new SnakePart(new Point( (int) body.getFirst().getFirst().getX() - unitSize, (int)body.getFirst().getFirst().getY() ), 'l'));
             }
             
         } else if(direction == Direction.RIGHT) {
 
-            if((int) body.getFirst().getX() + unitSize >= WIDTH){
-                body.addFirst(new Point( 0 , (int)body.getFirst().getY()));
+            if((int) body.getFirst().getFirst().getX() + unitSize >= WIDTH){
+                body.addFirst(new SnakePart(new Point( 0 , (int)body.getFirst().getFirst().getY()),'r'));
             } else{
-                body.addFirst(new Point( (int) body.getFirst().getX() + unitSize , (int)body.getFirst().getY()));
+                body.addFirst(new SnakePart(new Point( (int) body.getFirst().getFirst().getX() + unitSize , (int)body.getFirst().getFirst().getY()), 'r'));
             }
 
         } else {
 
-            if((int)body.getFirst().getY() + unitSize >= HEIGHT ){
-                body.addFirst(new Point( (int) body.getFirst().getX() , 0));
+            if((int)body.getFirst().getFirst().getY() + unitSize >= HEIGHT ){
+                body.addFirst(new SnakePart(new Point( (int) body.getFirst().getFirst().getX() , 0), 'd'));
             } else {
-                body.addFirst(new Point( (int) body.getFirst().getX() , (int)body.getFirst().getY() + unitSize));
+                body.addFirst(new SnakePart(new Point( (int) body.getFirst().getFirst().getX() , (int)body.getFirst().getFirst().getY() + unitSize), 'd'));
             }
 
         }
@@ -65,7 +65,7 @@ public class Snake {
     }
 
     private boolean CheckFruitCollision(Point fruit) {
-        return body.getFirst().equals(fruit);
+        return body.getFirst().getFirst().equals(fruit);
     }
 
     public boolean checkSelfColision(){
@@ -73,7 +73,7 @@ public class Snake {
        if (body.size() > 3) {
 
         for(int i = 1 ; i < body.size(); i++){
-            if(body.get(i).equals(body.getFirst())){
+            if(body.get(i).equals(body.getFirst().getFirst())){
                 return true;
             }
         }
@@ -84,9 +84,23 @@ public class Snake {
         
     }
 
-    public LinkedList<Point> getSnakeBody() {
+    public LinkedList<SnakePart> getSnakeBody() {
         
         return body;
+
+    }
+
+
+    public int getSize(){
+
+        return body.size();
+
+    }
+
+
+    public SnakePart getPart(int i) {
+
+        return body.get(i);
 
     }
 }

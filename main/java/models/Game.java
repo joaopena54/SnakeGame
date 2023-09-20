@@ -13,6 +13,8 @@ import main.java.enums.Direction;
 
 public class Game extends JPanel implements ActionListener{
 
+    private BufferedImage bufferImage;
+
     private Random random = new Random();
     private Timer timer;
 
@@ -121,19 +123,149 @@ public class Game extends JPanel implements ActionListener{
     public void paintComponent(Graphics g) {
     super.paintComponent(g);
 
-    BufferedImage head = snakeImage.getSubimage(256, 0, subimageWidth, subimageHeigth);
+    if (bufferImage == null || bufferImage.getWidth() != getWidth() || bufferImage.getHeight() != getHeight()) {
+        bufferImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+    }
+
+    Graphics bufferGraphics = bufferImage.getGraphics();
+    bufferGraphics.setColor(Color.BLACK);
+    bufferGraphics.fillRect(0, 0, getWidth(), getHeight());
+
+    BufferedImage headUp = snakeImage.getSubimage(192, 0, subimageWidth, subimageHeigth);
+    BufferedImage headLeft = snakeImage.getSubimage(192, 64, subimageWidth, subimageHeigth);
+    BufferedImage headRight = snakeImage.getSubimage(256, 0, subimageWidth, subimageHeigth);
+    BufferedImage headDown = snakeImage.getSubimage(256, 64, subimageWidth, subimageHeigth);
+    BufferedImage bodyHorizontal = snakeImage.getSubimage(64, 0, subimageWidth, subimageHeigth);
+    BufferedImage bodyVertical = snakeImage.getSubimage(128, 64, subimageWidth, subimageHeigth);
+    BufferedImage tailUp = snakeImage.getSubimage(256, 192, subimageWidth, subimageHeigth);
+    BufferedImage tailLeft = snakeImage.getSubimage(256, 128, subimageWidth, subimageHeigth);
+    BufferedImage tailRight = snakeImage.getSubimage(192, 192, subimageWidth, subimageHeigth);
+    BufferedImage tailDown = snakeImage.getSubimage(192, 128, subimageWidth, subimageHeigth);
+    BufferedImage turnRightUpDownLeft = snakeImage.getSubimage(128, 128, subimageWidth, subimageHeigth);
+    BufferedImage turnUpLeftRightDown = snakeImage.getSubimage(128, 0, subimageWidth, subimageHeigth);
+    BufferedImage turnUpRightLeftDown = snakeImage.getSubimage(0, 0, subimageWidth, subimageHeigth);
+    BufferedImage turnDownRightLeftUP = snakeImage.getSubimage(0, 64, subimageWidth, subimageHeigth);
+    BufferedImage apple = snakeImage.getSubimage(0, 192, subimageWidth, subimageHeigth);
 
     g.setColor(Color.GREEN); 
-    for (Point segment : snake.getSnakeBody()) {
+    
+    for (int i = 0; i < snake.getSize(); i++) {
 
-        //g.fillRect(segment.x, segment.y, UNIT_SIZE, UNIT_SIZE);
-        g.drawImage(head, segment.x, segment.y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
-        
+        if(i == 0){
+
+            if(snake.getPart(i).getSecond() == 'r'){
+
+                g.drawImage(headRight, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+            } else if (snake.getPart(i).getSecond() == 'u') {
+
+                g.drawImage(headUp, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+            } else if (snake.getPart(i).getSecond() == 'd') {
+            
+                g.drawImage(headDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+            } else {
+
+                g.drawImage(headLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+            }
+
+            
+        } else if(i == (snake.getSize()-1)){
+
+            if(snake.getPart(i).getSecond() == 'r'){
+
+                g.drawImage(tailLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+            } else if (snake.getPart(i).getSecond() == 'u') {
+
+                g.drawImage(tailDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+            } else if (snake.getPart(i).getSecond() == 'd') {
+            
+                g.drawImage(tailUp, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+            } else {
+
+                g.drawImage(tailRight, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+            }
+
+        } else {
+
+            if(snake.getPart(i).getSecond() == 'r'){
+
+                if(snake.getPart(i-1).getSecond() == 'u'){
+
+                    g.drawImage(turnRightUpDownLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else if (snake.getPart(i-1).getSecond() == 'd') {
+
+                    g.drawImage(turnUpLeftRightDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                
+                } else {
+
+                    g.drawImage(bodyHorizontal, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                }
+
+            } else if (snake.getPart(i).getSecond() == 'u') {
+
+                if(snake.getPart(i-1).getSecond() == 'r'){
+
+                    g.drawImage(turnUpRightLeftDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else if (snake.getPart(i-1).getSecond() == 'l') {
+
+                    g.drawImage(turnUpLeftRightDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                
+                } else {
+
+                    g.drawImage(bodyVertical, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                }
+
+            } else if (snake.getPart(i).getSecond() == 'd') {
+            
+                if(snake.getPart(i-1).getSecond() == 'r'){
+
+                    g.drawImage(turnDownRightLeftUP, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else if (snake.getPart(i-1).getSecond() == 'l') {
+
+                    g.drawImage(turnRightUpDownLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                
+                } else {
+
+                    g.drawImage(bodyVertical, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                }
+
+            } else {
+
+                if(snake.getPart(i-1).getSecond() == 'u'){
+
+                    g.drawImage(turnDownRightLeftUP, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else if (snake.getPart(i-1).getSecond() == 'd') {
+
+                    g.drawImage(turnUpRightLeftDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                
+                } else {
+
+                    g.drawImage(bodyHorizontal, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                }
+            }   
+
+        }
+
     
     }
 
     g.setColor(Color.RED); 
-    g.fillRect(foodX, foodY, UNIT_SIZE, UNIT_SIZE);
+    g.drawImage(apple, foodX, foodY, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
     // Add other elements like score, game-over screen, etc.
 }
