@@ -17,23 +17,39 @@ public class Snake {
 
     }
 
-    public boolean move(Direction direction, int unitSize,Point fruit){
+    public boolean move(Direction direction, int unitSize,Point fruit, int WIDTH, int HEIGHT){
 
         if(direction == Direction.UP) {
 
-            body.addFirst(new Point( (int) body.getFirst().getX() , (int)body.getFirst().getY() - unitSize));
+            if( (int)body.getFirst().getY() - unitSize < 0 ){
+                body.addFirst(new Point( (int) body.getFirst().getX() , HEIGHT));
+            } else {
+                body.addFirst(new Point( (int) body.getFirst().getX() , (int)body.getFirst().getY() - unitSize));
+            }  
 
         } else if(direction == Direction.LEFT) {
 
-            body.addFirst(new Point( (int) body.getFirst().getX() - unitSize, (int)body.getFirst().getY()));
-
+            if((int) body.getFirst().getX() - unitSize < 0){
+                body.addFirst(new Point( WIDTH, (int)body.getFirst().getY()));
+            } else {
+                body.addFirst(new Point( (int) body.getFirst().getX() - unitSize, (int)body.getFirst().getY()));
+            }
+            
         } else if(direction == Direction.RIGHT) {
 
-            body.addFirst(new Point( (int) body.getFirst().getX() + unitSize , (int)body.getFirst().getY()));
+            if((int) body.getFirst().getX() + unitSize >= WIDTH){
+                body.addFirst(new Point( 0 , (int)body.getFirst().getY()));
+            } else{
+                body.addFirst(new Point( (int) body.getFirst().getX() + unitSize , (int)body.getFirst().getY()));
+            }
 
         } else {
 
-            body.addFirst(new Point( (int) body.getFirst().getX() , (int)body.getFirst().getY() + unitSize));
+            if((int)body.getFirst().getY() + unitSize >= HEIGHT ){
+                body.addFirst(new Point( (int) body.getFirst().getX() , 0));
+            } else {
+                body.addFirst(new Point( (int) body.getFirst().getX() , (int)body.getFirst().getY() + unitSize));
+            }
 
         }
 
@@ -54,9 +70,9 @@ public class Snake {
 
     public boolean checkSelfColision(){
         
-       if (body.size() > 4) {
+       if (body.size() > 3) {
 
-        for(int i = 4 ; i < body.size(); i++){
+        for(int i = 1 ; i < body.size(); i++){
             if(body.get(i).equals(body.getFirst())){
                 return true;
             }
@@ -74,3 +90,4 @@ public class Snake {
 
     }
 }
+
