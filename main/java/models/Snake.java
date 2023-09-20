@@ -14,6 +14,7 @@ public class Snake {
         body = new LinkedList<SnakePart>();
         SnakePart start = new SnakePart( new Point(x, y) , 'r');
         body.add(start);
+        body.add(new SnakePart(new Point(x-20, y), 'r'));
 
     }
 
@@ -73,7 +74,7 @@ public class Snake {
        if (body.size() > 3) {
 
         for(int i = 1 ; i < body.size(); i++){
-            if(body.get(i).equals(body.getFirst().getFirst())){
+            if(body.get(i).getFirst().equals(body.getFirst().getFirst())){
                 return true;
             }
         }

@@ -35,6 +35,7 @@ public class Game extends JPanel implements ActionListener{
     private final int subimageWidth = 64;
     private final int subimageHeigth = 64;
     private BufferedImage snakeImage;
+    private BufferedImage background;
 
 
     private Direction direction = Direction.RIGHT;
@@ -47,6 +48,7 @@ public class Game extends JPanel implements ActionListener{
         try {
             
             snakeImage = ImageIO.read(getClass().getResource("snake-graphics.png"));
+            background = ImageIO.read(getClass().getResource("background.png"));
 
 
         } catch (IOException e) {
@@ -128,8 +130,9 @@ public class Game extends JPanel implements ActionListener{
     }
 
     Graphics bufferGraphics = bufferImage.getGraphics();
-    bufferGraphics.setColor(Color.BLACK);
     bufferGraphics.fillRect(0, 0, getWidth(), getHeight());
+
+    bufferGraphics.drawImage(background, WIDTH/10000, HEIGHT/10000, getWidth(), getHeight(), this);
 
     BufferedImage headUp = snakeImage.getSubimage(192, 0, subimageWidth, subimageHeigth);
     BufferedImage headLeft = snakeImage.getSubimage(192, 64, subimageWidth, subimageHeigth);
@@ -145,9 +148,7 @@ public class Game extends JPanel implements ActionListener{
     BufferedImage turnUpLeftRightDown = snakeImage.getSubimage(128, 0, subimageWidth, subimageHeigth);
     BufferedImage turnUpRightLeftDown = snakeImage.getSubimage(0, 0, subimageWidth, subimageHeigth);
     BufferedImage turnDownRightLeftUP = snakeImage.getSubimage(0, 64, subimageWidth, subimageHeigth);
-    BufferedImage apple = snakeImage.getSubimage(0, 192, subimageWidth, subimageHeigth);
-
-    g.setColor(Color.GREEN); 
+    BufferedImage apple = snakeImage.getSubimage(0, 192, subimageWidth, subimageHeigth); 
     
     for (int i = 0; i < snake.getSize(); i++) {
 
@@ -155,19 +156,19 @@ public class Game extends JPanel implements ActionListener{
 
             if(snake.getPart(i).getSecond() == 'r'){
 
-                g.drawImage(headRight, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                bufferGraphics.drawImage(headRight, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
             } else if (snake.getPart(i).getSecond() == 'u') {
 
-                g.drawImage(headUp, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                bufferGraphics.drawImage(headUp, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
             } else if (snake.getPart(i).getSecond() == 'd') {
             
-                g.drawImage(headDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                bufferGraphics.drawImage(headDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
             } else {
 
-                g.drawImage(headLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                bufferGraphics.drawImage(headLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
             }
 
@@ -176,20 +177,66 @@ public class Game extends JPanel implements ActionListener{
 
             if(snake.getPart(i).getSecond() == 'r'){
 
-                g.drawImage(tailLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                if(snake.getPart(i-1).getSecond() == 'u'){
+
+                    bufferGraphics.drawImage(tailDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else if (snake.getPart(i-1).getSecond() == 'd'){
+
+                    bufferGraphics.drawImage(tailUp, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else {
+
+                    bufferGraphics.drawImage(tailLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                }
 
             } else if (snake.getPart(i).getSecond() == 'u') {
 
-                g.drawImage(tailDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                if(snake.getPart(i-1).getSecond() == 'r'){
+
+                    bufferGraphics.drawImage(tailLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else if (snake.getPart(i-1).getSecond() == 'l'){
+
+                    bufferGraphics.drawImage(tailRight, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else {
+
+                    bufferGraphics.drawImage(tailDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                }
 
             } else if (snake.getPart(i).getSecond() == 'd') {
             
-                g.drawImage(tailUp, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                if(snake.getPart(i-1).getSecond() == 'r'){
 
+                    bufferGraphics.drawImage(tailLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else if (snake.getPart(i-1).getSecond() == 'l'){
+
+                    bufferGraphics.drawImage(tailRight, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else {
+
+                    bufferGraphics.drawImage(tailUp, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                }
             } else {
 
-                g.drawImage(tailRight, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                if(snake.getPart(i-1).getSecond() == 'u'){
 
+                    bufferGraphics.drawImage(tailDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else if (snake.getPart(i-1).getSecond() == 'd'){
+
+                    bufferGraphics.drawImage(tailUp, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                } else {
+
+                    bufferGraphics.drawImage(tailRight, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+                }
             }
 
         } else {
@@ -198,15 +245,15 @@ public class Game extends JPanel implements ActionListener{
 
                 if(snake.getPart(i-1).getSecond() == 'u'){
 
-                    g.drawImage(turnRightUpDownLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(turnRightUpDownLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
                 } else if (snake.getPart(i-1).getSecond() == 'd') {
 
-                    g.drawImage(turnUpLeftRightDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(turnUpLeftRightDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
                 
                 } else {
 
-                    g.drawImage(bodyHorizontal, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(bodyHorizontal, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
                 }
 
@@ -214,15 +261,15 @@ public class Game extends JPanel implements ActionListener{
 
                 if(snake.getPart(i-1).getSecond() == 'r'){
 
-                    g.drawImage(turnUpRightLeftDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(turnUpRightLeftDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
                 } else if (snake.getPart(i-1).getSecond() == 'l') {
 
-                    g.drawImage(turnUpLeftRightDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(turnUpLeftRightDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
                 
                 } else {
 
-                    g.drawImage(bodyVertical, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(bodyVertical, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
                 }
 
@@ -230,15 +277,15 @@ public class Game extends JPanel implements ActionListener{
             
                 if(snake.getPart(i-1).getSecond() == 'r'){
 
-                    g.drawImage(turnDownRightLeftUP, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(turnDownRightLeftUP, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
                 } else if (snake.getPart(i-1).getSecond() == 'l') {
 
-                    g.drawImage(turnRightUpDownLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(turnRightUpDownLeft, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
                 
                 } else {
 
-                    g.drawImage(bodyVertical, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(bodyVertical, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
                 }
 
@@ -246,15 +293,15 @@ public class Game extends JPanel implements ActionListener{
 
                 if(snake.getPart(i-1).getSecond() == 'u'){
 
-                    g.drawImage(turnDownRightLeftUP, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(turnDownRightLeftUP, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
                 } else if (snake.getPart(i-1).getSecond() == 'd') {
 
-                    g.drawImage(turnUpRightLeftDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(turnUpRightLeftDown, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
                 
                 } else {
 
-                    g.drawImage(bodyHorizontal, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+                    bufferGraphics.drawImage(bodyHorizontal, snake.getPart(i).getFirst().x, snake.getPart(i).getFirst().y, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
 
                 }
             }   
@@ -264,8 +311,9 @@ public class Game extends JPanel implements ActionListener{
     
     }
 
-    g.setColor(Color.RED); 
-    g.drawImage(apple, foodX, foodY, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+    bufferGraphics.drawImage(apple, foodX, foodY, UNIT_SIZE, UNIT_SIZE, getFocusCycleRootAncestor());
+
+    g.drawImage(bufferImage, 0, 0, this);   
 
     // Add other elements like score, game-over screen, etc.
 }
